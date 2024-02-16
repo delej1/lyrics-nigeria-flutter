@@ -1,9 +1,8 @@
-# lyrics_nigeria_flutter
-
-Lyrics Nigeria Multi
+# Lyrics Nigeria
 
 ## Getting Started
 
+![](https://github.com/delej1/lyrics-nigeria-flutter/blob/main/Screenrecorder-2024-02-16-12-15-56-282~2%20(1)%20(online-video-cutter.com).mp4)
 This project is a starting point for a Flutter application.
 
 A few resources to get you started if this is your first Flutter project:
