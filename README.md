@@ -1,15 +1,8 @@
 # Lyrics Nigeria
+![unnamed](https://github.com/delej1/lyrics-nigeria-flutter/assets/99338783/817e9989-6e63-4372-bae2-93183fa0585e)
+![unnamed (1)](https://github.com/delej1/lyrics-nigeria-flutter/assets/99338783/5b4f5162-ac2f-4ed2-b1cd-146714dd2d2b)
+![unnamed (2)](https://github.com/delej1/lyrics-nigeria-flutter/assets/99338783/7b934477-0b5b-478a-9281-20a10d4d43e0)
 
-## Getting Started
-
-![](https://github.com/delej1/lyrics-nigeria-flutter/blob/main/Screenrecorder-2024-02-16-12-15-56-282~2%20(1)%20(online-video-cutter.com).mp4)
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+App for Nigerian lyrics  & games, where you can get Nigerian afro pop, hip hop, R&B, and gospel music lyrics easily.
+You can also stream the instrumental of your favourite Nigerian lyrics and sing along while you're bored.
+We also provide a game section where you can unwind and have fun with a variety of games available to play on demand.
