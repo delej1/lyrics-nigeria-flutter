@@ -6,49 +6,66 @@ import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 class AuthService {
   signInWithGoogle() async {
-    // Trigger the authentication flow
+    final googleSignIn = GoogleSignIn.instance;
+
+    // Authenticate user with desired scopes
     final GoogleSignInAccount? googleUser =
-        await GoogleSignIn(scopes: <String>["email"]).signIn();
+        await googleSignIn.authenticate(scopeHint: ['email']);
 
-    // Obtain the auth details from the request
-    final GoogleSignInAuthentication googleAuth =
-        await googleUser!.authentication;
+    if (googleUser == null) return; // user cancelled
 
-    // Create a new credential
+    final googleAuth = await googleUser.authentication;
+
+    // Only idToken is needed for Firebase Auth
     final credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
     );
-    // Once signed in, return the UserCredential
+
     await FirebaseAuth.instance.signInWithCredential(credential);
 
     doLogIn();
   }
 
-  Future signInWithApple() async{
+  Future signInWithApple() async {
     final appleCredential = await SignInWithApple.getAppleIDCredential(
-      scopes: [AppleIDAuthorizationScopes.email, AppleIDAuthorizationScopes.fullName],
+      scopes: [
+        AppleIDAuthorizationScopes.email,
+        AppleIDAuthorizationScopes.fullName
+      ],
     );
 
-    //Create an `OAuthCredential` from the credential returned by Apple.
     final oauthCredential = OAuthProvider("apple.com").credential(
-      idToken: appleCredential.identityToken
+      idToken: appleCredential.identityToken,
     );
-    final UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(oauthCredential).then((value) => doLogIn());
 
-    if (userCredential.user?.displayName == null ||
-        (userCredential.user?.displayName != null && userCredential.user!.displayName!.isEmpty)) {
+    final UserCredential userCredential =
+        await FirebaseAuth.instance.signInWithCredential(oauthCredential);
+
+    doLogIn();
+
+    final user = userCredential.user;
+
+    // Fix display name if missing
+    if (user?.displayName == null || user!.displayName!.isEmpty) {
       final fixDisplayNameFromApple = [
         appleCredential.givenName ?? '',
         appleCredential.familyName ?? '',
       ].join(' ').trim();
-      await userCredential.user?.updateDisplayName(fixDisplayNameFromApple);
+
+      await user?.updateDisplayName(fixDisplayNameFromApple);
     }
-    if (userCredential.user?.email == null ||
-        (userCredential.user?.email != null && userCredential.user!.email!.isEmpty)) {
-      await userCredential.user?.updateEmail(appleCredential.email ?? '');
+
+    // Fix email if missing (requires reauthentication)
+    if (user?.email == null || user!.email!.isEmpty) {
+      final credential = OAuthProvider("apple.com").credential(
+        idToken: appleCredential.identityToken,
+      );
+
+      await user!.reauthenticateWithCredential(credential);
+
+      // Firebase requires verification
+      await user.verifyBeforeUpdateEmail(appleCredential.email ?? '');
     }
-    //Now, FirebaseAuth.instance.currentUser contains the user with all the name and email updated.
   }
 
   signOut() {
@@ -57,10 +74,10 @@ class AuthService {
   }
 }
 
-doLogIn(){
+doLogIn() {
   Get.offAndToNamed(RouteHelper.getLoadingPage());
 }
 
-doSignOut(){
+doSignOut() {
   Get.offAndToNamed(RouteHelper.getLoadingPage());
 }
